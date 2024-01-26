@@ -13,10 +13,14 @@ internal class TestListener : ILevelChangeListener
 		_timeToWait = timeToWait;
 	}
 
-	public Action<int> LevelChanged {
-		get => a => {
-			gateLevelChangeEvents++;
-		};
+	public Func<int, Task> LevelChanged => Refresh;
+
+	protected async  Task Refresh(int newLevel)
+	{
+		gateLevelChangeEvents++;
+		await Task.Delay(0);
+
+
 	}
 
 	public void WaitAndAssertPinLevel(int value ,Pin p, int expectedGateLevelChangeEvents = 0)

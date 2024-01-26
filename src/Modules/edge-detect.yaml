@@ -1,0 +1,22 @@
+---
+pins:
+  - A
+  - Q
+
+subModules:
+  - name: And
+    type: and 
+  - name: slownot
+    type: not 
+    properties:
+      propogationDelay: 20000
+
+connections:
+  - from: A
+    to: And.A
+  - from: A
+    to: slownot.A
+  - from: slownot.Q
+    to: And.B
+  - from: And.Q
+    to: Q

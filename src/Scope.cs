@@ -8,7 +8,6 @@ namespace Factory
 		private readonly List<Probe> _probes = [];
 		private bool _running = false;
         private readonly Dictionary<string, List<int>> _channelValues;
-		private int _col;
         private readonly int _top = 5;
 		object _lockObj = new object();
 
@@ -19,7 +18,6 @@ namespace Factory
 				AutoReset = true
 			};
 			_timer.Elapsed += OnTimerElapsed;
-            _col = 12;
 
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			_channelValues = [];

@@ -5,22 +5,27 @@ using Gates;
 
 var factory = new ModuleFactory();
 
-//var clock = factory.Create("clock", "clock");
-var module = factory.Create("d-latch", "latch");
+var clock = new Clock("123");// factory.Create("clock", "clock");
+var module = factory.Create("d-flipflop", "df");
 
 var scope = new Scope();
 
 Console.WriteLine("Press any key to start simulation");
-Console.ReadKey(true);
 
-//scope.AddProbe("Clock", clock.Pins["Q"]);
+Console.ReadKey(true);
+clock.Start(1000);
+
+scope.AddProbe("Clock", clock.Pins["Q"]);
 
 //TogglePin(clock.Pins["A"]);
 
-scope.AddProbe("D", module.Pins["D"]);
-scope.AddProbe("E", module.Pins["E"]);
-scope.AddProbe("Q", module.Pins["Q"]);
-scope.AddProbe("Q!", module.Pins["Q!"]);
+
+clock.Pins["Q"].ConnectTo(module.Pins["CLK"]);
+
+scope.AddProbe("d-flipflop.clk", module.Pins["CLK"]);
+scope.AddProbe("d-flipflop.d", module.Pins["D"]);
+scope.AddProbe("d-flipflop.q", module.Pins["Q"]);
+
 
 //scope.AddProbe("And1.Q", module.Modules["And1"].Pins["Q"]);
 //scope.AddProbe("And2.Q", module.Modules["And2"].Pins["Q"]);
@@ -34,7 +39,7 @@ scope.AddProbe("Q!", module.Pins["Q!"]);
 
 
 
-scope.Start(100);
+scope.Start(10);
 
 do
 {

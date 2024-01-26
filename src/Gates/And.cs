@@ -12,10 +12,11 @@
             Pins["B"].ConnectTo(this);
 		}
 
-		protected override void Refresh(int newLevel)
+		protected async override Task Refresh(int newLevel)
 		{
 			bool a = Pins["A"].Level > 2;
 			bool b = Pins["B"].Level > 2;
+            await Task.Delay(0);
 			Pins["Q"].Level = (a & b) ? 5 : 0;
 		}
 	}

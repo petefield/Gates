@@ -15,7 +15,7 @@ namespace TestProject1
         [Theory]
         [InlineData(0, 5)]
         [InlineData(5, 0)]
-        public async void ShouldFollowTruthTable(int A, int Q)
+        public  void ShouldFollowTruthTable(int A, int Q)
         {
             var testListener = new TestListener(TimeSpan.FromMilliseconds(1));
 

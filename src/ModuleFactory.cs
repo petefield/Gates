@@ -44,7 +44,6 @@ namespace Gates
 				foreach (var property in subModule.Properties)
                 {
                     var p = type.GetProperty(property.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
                     var pt = p.PropertyType;
                     var value = Convert.ChangeType(property.Value, pt);
 					p?.SetValue(m, value);
@@ -80,7 +79,9 @@ namespace Gates
             }
             else
             {
-                pin = module.Pins[pinDescription];
+
+                    pin = module.Pins[pinDescription];
+
             }
             return pin;
         }
@@ -91,7 +92,7 @@ namespace Gates
             {
                 "not" => new Not(name),
                 "and" => new And(name),
-                "or" => new Or(name),
+                "or"  => new Or(name),
                 _ => Load(moduleType, name),
             };
 

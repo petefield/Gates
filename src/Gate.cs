@@ -7,9 +7,9 @@ public abstract class Gate: Module, ILevelChangeListener
 		Modules = [];
 	}
 
-	protected abstract void Refresh(int level);
+	protected abstract Task Refresh(int level);
 
-	public Action<int> LevelChanged => Refresh;
+	public Func<int,Task> LevelChanged => Refresh;
 
 
 }

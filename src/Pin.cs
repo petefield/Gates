@@ -3,7 +3,7 @@ namespace Gates;
 
 public interface ILevelChangeListener
 {
-	public Action<int>? LevelChanged { get;  }
+	public Func<int, Task>? LevelChanged { get;  }
 }
 
 public class Pin : ILevelChangeListener
@@ -19,14 +19,14 @@ public class Pin : ILevelChangeListener
 		set => LevelChangedHandler(value);
 	}
 
-	public Action<int>? LevelChanged => LevelChangedHandler;
+	public Func<int, Task>? LevelChanged => LevelChangedHandler;
 
 	public void ConnectTo(ILevelChangeListener pin)
 	{
 		_listeners.Add(pin);
 	}
 
-	private void LevelChangedHandler(int newLevel)
+	private Task LevelChangedHandler(int newLevel)
 	{			
 		
 		_level = newLevel;
@@ -34,13 +34,19 @@ public class Pin : ILevelChangeListener
 		if (_listeners.Count == 1)
 		{
 			_listeners.Single().LevelChanged?.Invoke(newLevel);
+			return Task.CompletedTask; 
 		}
 		else
 		{
-			Parallel.ForEach(_listeners, listener =>
+			var options = new ParallelOptions { MaxDegreeOfParallelism = 2 };
+
+
+			return Parallel.ForEachAsync(_listeners, options, async (listener, c)  =>
 			{
 				var l = listener.LevelChanged;
-				l?.Invoke(newLevel);
+
+				if(l != null) 
+					await l.Invoke(newLevel);
 			});
 		}
 	 }
