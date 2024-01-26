@@ -1,0 +1,30 @@
+using Gates;
+using Xunit;
+
+namespace TestProject1
+{
+	public class NotTests
+    {
+		readonly Module _sut;
+       
+        public NotTests()
+        {
+            _sut = new ModuleFactory().Create("not", "Not");
+        }
+
+        [Theory]
+        [InlineData(0, 5)]
+        [InlineData(5, 0)]
+        public async void ShouldFollowTruthTable(int A, int Q)
+        {
+            var testListener = new TestListener(TimeSpan.FromMicroseconds(10));
+
+			_sut.Pins["Q"].ConnectTo(testListener);
+
+			_sut.Pins["A"].Level = A;
+
+            testListener.WaitAndAssertPinLevel(Q, _sut.Pins["Q"], expectedGateLevelChangeEvents: 1);
+
+		}
+	}
+}

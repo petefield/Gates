@@ -1,0 +1,21 @@
+---
+pins:
+  - A
+  - B
+  - Q
+
+subModules:
+  - name: And
+    type: and
+  - name: Not
+    type: not
+
+connections:
+  - from: A
+    to: And.A
+  - from: B
+    to: And.B
+  - from: And.Q
+    to: Not.A
+  - from: Not.Q
+    to: Q

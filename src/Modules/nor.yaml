@@ -1,0 +1,21 @@
+---
+pins:
+  - A
+  - B
+  - Q
+
+subModules:
+  - name: Or
+    type: or
+  - name: Not
+    type: not
+
+connections:
+  - from: A
+    to: Or.A
+  - from: B
+    to: Or.B
+  - from: Or.Q
+    to: Not.A
+  - from: Not.Q
+    to: Q

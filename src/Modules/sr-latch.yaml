@@ -1,0 +1,27 @@
+---
+pins:
+  - R
+  - S
+  - Q
+  - Q!
+
+subModules:
+  - name: Nor1
+    type: nor
+  - name: Nor2
+    type: nor
+
+connections:
+  - from: R
+    to: Nor1.A
+  - from: S
+    to: Nor2.B
+  - from: Nor1.Q
+    to: Nor2.A
+  - from: Nor1.Q
+    to: Q
+  - from: Nor2.Q
+    to: Nor1.B
+  - from: Nor2.Q
+    to: Q!
+
