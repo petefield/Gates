@@ -1,5 +1,6 @@
 ﻿using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
+using System.Reflection;
 
 namespace Gates
 {
@@ -35,7 +36,24 @@ namespace Gates
             foreach (var subModule in moduleDescription.SubModules)
             {
                 var m = Create(subModule.Type, subModule.Name);
-                module.Modules.Add(m.Name, m);
+
+
+                var type = m.GetType();
+
+
+				foreach (var property in subModule.Properties)
+                {
+                    var p = type.GetProperty(property.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                    var pt = p.PropertyType;
+                    var value = Convert.ChangeType(property.Value, pt);
+					p?.SetValue(m, value);
+
+                }
+
+
+
+				module.Modules.Add(m.Name, m);
             }
 
             foreach (var connection in moduleDescription.Connections)
@@ -74,7 +92,6 @@ namespace Gates
                 "not" => new Not(name),
                 "and" => new And(name),
                 "or" => new Or(name),
-                "clock" => new Clock(name),
                 _ => Load(moduleType, name),
             };
 

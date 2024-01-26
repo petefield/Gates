@@ -6,20 +6,28 @@ namespace Gates
         public Pin A => Pins["A"];
         public Pin Q => Pins["Q"];
 
+        private TimeSpan _propogationDelay;
+
 		public Not(string name) : base("not", name)
         {
             Pins.Add("A", new Pin());
             Pins.Add("Q", new Pin());
             Pins["Q"].Level = 5;
             Pins["A"].ConnectTo(this);
+			_propogationDelay = TimeSpan.FromMicroseconds(new Random().Next(1,10) );
 		}
 
-        protected override void Refresh(int newLevel)
+        public double PropogationDelay {
+            get => _propogationDelay.TotalMicroseconds;
+            set { _propogationDelay = TimeSpan.FromMicroseconds(value); }  }
+
+
+		protected override void Refresh(int newLevel)
         {
             Task.Run(() =>
             {
-                Thread.Sleep(TimeSpan.FromMicroseconds(10));
-                bool pinAisHigh = Pins["A"].Level >= 2;
+                bool pinAisHigh = Pins["A"].Level >= 2;    
+                Thread.Sleep(_propogationDelay);
                 Pins["Q"].Level = pinAisHigh ? 0 : 5;
             });
 		}

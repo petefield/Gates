@@ -10,8 +10,9 @@ namespace Factory
         private readonly Dictionary<string, List<int>> _channelValues;
 		private int _col;
         private readonly int _top = 5;
+		object _lockObj = new object();
 
-        public Scope()
+		public Scope()
         {
 			_timer = new System.Timers.Timer
 			{
@@ -22,7 +23,6 @@ namespace Factory
 
 			Console.OutputEncoding = System.Text.Encoding.Unicode;
 			_channelValues = [];
-
 		}
 
         public void Start(int interval) {
@@ -47,19 +47,23 @@ namespace Factory
 
 		private void OnTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-             foreach(Probe probe in _probes)
+            lock (_lockObj)
             {
-                _channelValues[probe.Name].Add(probe.Level);
-            }
+                foreach (Probe probe in _probes)
+                {
+                    _channelValues[probe.Name].Add(probe.Level);
+                }
 
-            var i = _top;
+                var i = _top;
 
-            foreach (var channel in _channelValues) {
-                var s = channel.Value.TakeLast(100).Select(FormatLevel).ToArray();
-                var plot = new string(s);
-                Console.SetCursorPosition(0, i);
-				Console.Write($"{channel.Key,-15} : {plot}");
-                i += 2;
+                foreach (var channel in _channelValues)
+                {
+                    var s = channel.Value.TakeLast(100).Select(FormatLevel).ToArray();
+                    var plot = new string(s);
+                    Console.SetCursorPosition(0, i);
+                    Console.Write($"{channel.Key,-15} : {plot}");
+                    i += 2;
+                }
             }
 		}
 

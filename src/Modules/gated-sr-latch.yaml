@@ -1,29 +1,34 @@
 ---
 pins:
   - R
-  - R
-
+  - E
   - S
   - Q
   - Q!
 
 subModules:
-  - name: Nor1
-    type: nor
-  - name: Nor2
-    type: nor
+  - name: And1
+    type: and
+  - name: And2
+    type: and
+  - name: srlatch
+    type: sr-latch
 
 connections:
   - from: R
-    to: Nor1.A
+    to: And1.A
+  - from: E
+    to: And1.B
+  - from: E
+    to: And2.A
   - from: S
-    to: Nor2.B
-  - from: Nor1.Q
-    to: Nor2.A
-  - from: Nor1.Q
+    to: And2.B
+  - from: And1.Q
+    to: srlatch.R
+  - from: And2.Q
+    to: srlatch.S 
+  - from: srlatch.Q
     to: Q
-  - from: Nor2.Q
-    to: Nor1.B
-  - from: Nor2.Q
+  - from: srlatch.Q!
     to: Q!
 

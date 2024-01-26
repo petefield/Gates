@@ -1,49 +1,37 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Factory;
 using Gates;
-using System.Runtime.CompilerServices;
 
-var A = "A";
-var B = "B";
-var Q = "Q";
 
-Console.WriteLine("Press any key to start simulation");
-Console.ReadKey();
-Console.Clear();
 var factory = new ModuleFactory();
 
-var sr_latch = factory.Create("sr-latch", "SR Latch");
+var clock = factory.Create("clock", "clock");
+var module = factory.Create("gated-sr-latch", "latch");
 
 var scope = new Scope();
 
+Console.WriteLine("Press any key to start simulation");
+Console.ReadKey(true);
 
-scope.AddProbe("S", sr_latch.Pins["S"]);
-scope.AddProbe("R", sr_latch.Pins["R"]);
-scope.AddProbe("Q", sr_latch.Pins["Q"]);
-scope.AddProbe("Q!", sr_latch.Pins["Q!"]);
-sr_latch.Pins["R"].Level = 5;
-Thread.Sleep(500);
-sr_latch.Pins["R"].Level = 0;
-//scope.AddProbe("Nor2.A", sr_latch.Modules["Nor2"].Pins["A"]);
-//scope.AddProbe("Nor2.B", sr_latch.Modules["Nor2"].Pins["B"]);
-//scope.AddProbe("Nor2.Q", sr_latch.Modules["Nor2"].Pins["Q"]);
+scope.AddProbe("Clock", clock.Pins["Q"]);
 
-//scope.AddProbe("Nor2.Or.A", sr_latch.Modules["Nor2"].Modules["Or"].Pins["A"]);
-//scope.AddProbe("Nor2.Or.B", sr_latch.Modules["Nor2"].Modules["Or"].Pins["B"]);
-//scope.AddProbe("Nor2.Or.Q", sr_latch.Modules["Nor2"].Modules["Or"].Pins["Q"]);
+TogglePin(clock.Pins["A"]);
 
-//scope.AddProbe("Nor2.Not.A", sr_latch.Modules["Nor2"].Modules["Not"].Pins["A"]);
-//scope.AddProbe("Nor2.Not.Q", sr_latch.Modules["Nor2"].Modules["Not"].Pins["Q"]);
+scope.AddProbe("S", module.Pins["S"]);
+scope.AddProbe("E", module.Pins["E"]);
+scope.AddProbe("R", module.Pins["R"]);
+scope.AddProbe("Q", module.Pins["Q"]);
+scope.AddProbe("Q!", module.Pins["Q!"]);
+
+//scope.AddProbe("And1.Q", module.Modules["And1"].Pins["Q"]);
+//scope.AddProbe("And2.Q", module.Modules["And2"].Pins["Q"]);
 
 
-//scope.AddProbe("Nor1.A", sr_latch.Modules["Nor1"].Pins["A"]); 
-//scope.AddProbe("Nor1.B", sr_latch.Modules["Nor1"].Pins["B"]);
-//scope.AddProbe("Nor1.Q", sr_latch.Modules["Nor1"].Pins["Q"]);
-//scope.AddProbe("Nor1.Or.A", sr_latch.Modules["Nor1"].Modules["Or"].Pins["A"]);
-//scope.AddProbe("Nor1.Or.B", sr_latch.Modules["Nor1"].Modules["Or"].Pins["B"]);
-//scope.AddProbe("Nor1.Or.Q", sr_latch.Modules["Nor1"].Modules["Or"].Pins["Q"]);
-//scope.AddProbe("Nor1.Not.A", sr_latch.Modules["Nor1"].Modules["Not"].Pins["A"]);
-//scope.AddProbe("Nor1.Not.Q", sr_latch.Modules["Nor1"].Modules["Not"].Pins["Q"]);
+//scope.AddProbe("sr.S", module.Modules["srlatch"].Pins["S"]);
+
+//scope.AddProbe("sr.Q", module.Modules["srlatch"].Pins["Q"]);
+
+
 
 
 
@@ -51,9 +39,9 @@ scope.Start(100);
 
 do
 {
-	var key = Console.ReadKey();
+	var keyInfo = Console.ReadKey(true);
 
-	if (key.Key == ConsoleKey.Spacebar)
+	if (keyInfo.Key == ConsoleKey.Spacebar)
 	{
 		if (scope.Running)
 		{
@@ -65,16 +53,20 @@ do
 		{
 			scope.Resume();
 			Console.SetCursorPosition(0,0);
-
 			Console.Write("      ");
 		}
 	}
 	else
 	{
-		var pinId = Char.ToUpper(key.KeyChar).ToString();
+		var pinId = Char.ToUpper(keyInfo.KeyChar).ToString();
 
-		if (sr_latch.Pins.TryGetValue(pinId, out var pin))
-			TogglePin(pin);
+		if (module.Pins.TryGetValue(pinId, out var pin))
+		{
+			if ((keyInfo.Modifiers & ConsoleModifiers.Shift) != 0)
+				TogglePin(pin);
+			else
+				Pulse(pin);
+		}
 	}
 } while (true);
 
@@ -85,4 +77,12 @@ static void TogglePin(Pin pin)
 	if (v < 2) pin.Level =5;
 }
 
+static void Pulse(Pin pin)
+{
+	var v = pin.Level;
+	var newV = (v >= 2) ? 0 : 5;
+	pin.Level = newV;
+	Thread.Sleep(10);
+	pin.Level = v;
+}
 

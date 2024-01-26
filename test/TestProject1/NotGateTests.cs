@@ -17,7 +17,7 @@ namespace TestProject1
         [InlineData(5, 0)]
         public async void ShouldFollowTruthTable(int A, int Q)
         {
-            var testListener = new TestListener(TimeSpan.FromMicroseconds(10));
+            var testListener = new TestListener(TimeSpan.FromMilliseconds(1));
 
 			_sut.Pins["Q"].ConnectTo(testListener);
 

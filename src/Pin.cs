@@ -31,10 +31,18 @@ public class Pin : ILevelChangeListener
 		
 		_level = newLevel;
 
-		Parallel.ForEach(_listeners, listener => {
-			var l = listener.LevelChanged;
-			l?.Invoke(newLevel);
-		});
+		if (_listeners.Count == 1)
+		{
+			_listeners.Single().LevelChanged?.Invoke(newLevel);
+		}
+		else
+		{
+			Parallel.ForEach(_listeners, listener =>
+			{
+				var l = listener.LevelChanged;
+				l?.Invoke(newLevel);
+			});
+		}
 	 }
 
 }

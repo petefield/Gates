@@ -1,0 +1,18 @@
+---
+pins:
+  - A
+  - Q
+
+subModules:
+  - name: Not
+    type: not 
+    properties:
+      propogationDelay: 250000
+
+connections:
+  - from: A
+    to: Not.A
+  - from: Not.Q
+    to: Not.A
+  - from: Not.Q
+    to: Q
