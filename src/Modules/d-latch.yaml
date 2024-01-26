@@ -1,0 +1,29 @@
+---
+pins:
+  - D
+  - E
+  - Q
+  - Q!
+
+subModules:
+  - name: not1
+    type: not 
+    properties:
+      propogationDelay: 0
+  - name: latch
+    type: gated-sr-latch
+
+connections:
+  - from: D
+    to: not1.A
+  - from: D
+    to: latch.S
+  - from: E
+    to: latch.E
+  - from: not1.Q
+    to: latch.R
+  - from: latch.Q
+    to: Q
+  - from: latch.Q!
+    to: Q!
+

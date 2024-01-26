@@ -5,21 +5,20 @@ using Gates;
 
 var factory = new ModuleFactory();
 
-var clock = factory.Create("clock", "clock");
-var module = factory.Create("gated-sr-latch", "latch");
+//var clock = factory.Create("clock", "clock");
+var module = factory.Create("d-latch", "latch");
 
 var scope = new Scope();
 
 Console.WriteLine("Press any key to start simulation");
 Console.ReadKey(true);
 
-scope.AddProbe("Clock", clock.Pins["Q"]);
+//scope.AddProbe("Clock", clock.Pins["Q"]);
 
-TogglePin(clock.Pins["A"]);
+//TogglePin(clock.Pins["A"]);
 
-scope.AddProbe("S", module.Pins["S"]);
+scope.AddProbe("D", module.Pins["D"]);
 scope.AddProbe("E", module.Pins["E"]);
-scope.AddProbe("R", module.Pins["R"]);
 scope.AddProbe("Q", module.Pins["Q"]);
 scope.AddProbe("Q!", module.Pins["Q!"]);
 

@@ -26,8 +26,13 @@ namespace Gates
         {
             Task.Run(() =>
             {
-                bool pinAisHigh = Pins["A"].Level >= 2;    
-                Thread.Sleep(_propogationDelay);
+                bool pinAisHigh = Pins["A"].Level >= 2;
+
+                if (_propogationDelay.TotalMicroseconds > 0) { 
+                                Thread.Sleep(_propogationDelay);
+
+                }
+
                 Pins["Q"].Level = pinAisHigh ? 0 : 5;
             });
 		}

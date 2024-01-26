@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Modules\d-latch.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Modules\nand.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
